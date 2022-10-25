@@ -1,0 +1,40 @@
+scPrivateArgs: &sc-private-args
+  assetNum: &asset-num 100
+
+test:
+  name: sc-private-test
+  description: >-
+    This is an benchmark for sc-private.
+  workers:
+    type: local
+    number: 1
+  rounds:
+    - label: privateDeal
+      description: >-
+        Test PrivateDeal through the deployed contract.
+      txNumber: *asset-num
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 50
+      workload:
+        module: workload/sc_private_workload/privateDeal.js
+        arguments: *sc-private-args
+    - label: readAssetPrivate
+      description: Test ReadAssetPrivate performance of the deployed contract.
+      txNumber: *asset-num
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 100
+      workload:
+        module: workload/sc_private_workload/readAssetPrivate.js
+        arguments: *sc-private-args
+monitors:
+  resource:
+  - module: docker
+    options:
+      interval: 5
+      containers:
+      - all
+                

@@ -1,0 +1,83 @@
+scArgs: &sc-args
+  assetNum: &asset-num 1000
+
+test:
+  name: sc-test
+  description: >-
+    This is an benchmark for sc.
+  workers:
+    type: local
+    number: 1
+  rounds:
+    - label: createAsset
+      description: >-
+        Test CreateAsset through the deployed contract.
+      txNumber: *asset-num
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 50
+      workload:
+        module: workload/sc_workload/createAsset.js
+        arguments: *sc-args
+    - label: readAsset
+      description: Test ReadAsset performance of the deployed contract.
+      txNumber: *asset-num
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 100
+      workload:
+        module: workload/sc_workload/readAsset.js
+        arguments: *sc-args
+    - label: sellOriginalAsset
+      description: Test SellOriginalAsset performance of the deployed contract.
+      txNumber: *asset-num
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 50
+      workload:
+        module: workload/sc_workload/sellOriginalAsset.js
+        arguments: *sc-args
+    - label: processAsset
+      description: >-
+        Test ProcessAsset through the deployed contract.
+      txNumber: *asset-num
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 50
+      workload:
+        module: workload/sc_workload/processAsset.js
+        arguments: *sc-args
+    - label: sellProcessedAsset
+      description: >-
+        Test SellProcessedAsset through the deployed contract.
+      txNumber: *asset-num
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 50
+      workload:
+        module: workload/sc_workload/sellProcessedAsset.js
+        arguments: *sc-args
+    - label: getHistory
+      description: >-
+        Test GetHistory through the deployed contract.
+      txNumber: *asset-num
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 100
+      workload:
+        module: workload/sc_workload/getHistory.js
+        arguments: *sc-args
+monitors:
+    resource:
+    - module: docker
+      options:
+        interval: 1
+        containers: 
+        - all
+                
